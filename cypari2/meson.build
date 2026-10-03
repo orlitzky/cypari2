@@ -41,7 +41,9 @@ foreach name, pyx : extension_data
     sources: pyx,
     subdir: 'cypari2',
     install: true,
-    dependencies: [cysignals, pari],
+    dependencies: [pari],
+    c_args: cysignals_cflags,
+    cython_args: cysignals_cythonflags,
     include_directories: [inc_root, inc_src],
   )
 endforeach

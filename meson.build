@@ -23,24 +23,12 @@ add_project_arguments('-X c_api_binop_methods=True', language: 'cython')
 # Compiler debug output
 run_command(cc, '-v', check:true)
 
-# Dependencies  
-inc_cysignals = run_command(
-  py,
-  [
-    '-c',
-    '''
-from os.path import relpath
-import cysignals
-path = cysignals.__file__.replace('__init__.py', '')
-try:
-  print(relpath(path))
-except Exception:
-  print(path)
-    '''.strip(),
-  ],
-  check: true,
-).stdout().strip()
-cysignals = declare_dependency(include_directories: inc_cysignals)
+# Dependencies
+cysignals_cflags = run_command('cysignals-config', '--cflags',
+                               check: true).stdout().splitlines()
+
+cysignals_cythonflags = run_command('cysignals-config', '--cythonflags',
+                                    check: true).stdout().splitlines()
 
 # Find PARI
 # GMP may be a dependency of Pari, but since Pari doesn't have a pkg-config file,
